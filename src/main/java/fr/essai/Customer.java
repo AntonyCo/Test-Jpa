@@ -1,3 +1,4 @@
+package fr.essai;
 import java.util.List;
 
 import javax.persistence.Column;

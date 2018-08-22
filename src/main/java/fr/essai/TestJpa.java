@@ -1,9 +1,20 @@
+package fr.essai;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+
+import fr.bank.Account;
+import fr.bank.Address;
+import fr.bank.Bank;
+import fr.bank.Operation;
 
 public class TestJpa {
 
@@ -87,6 +98,61 @@ public class TestJpa {
 					System.out.println(strb);
 				}
 				break;
+			case 5:
+				//TP 4 
+				System.out.println("Begininng generation...");
+				EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_bank");
+				EntityManager entm = emf.createEntityManager();
+				EntityTransaction et = entm.getTransaction();
+				et.begin();
+				
+				Bank b = new Bank();
+				b.setName("Crédit Agricole");
+
+				Address a = new Address();
+				a.setCity("Lozanne");
+				a.setNumber(45);
+				a.setPostalCode(69380);
+				a.setStreet("Rue des cerisiers");
+				
+				Account acc = new Account();
+				acc.setBalance(1000d);
+				acc.setNumber("000AC");
+				
+				Operation op = new Operation();
+				op.setAccount(acc);
+				op.setAmount(100d);
+				op.setDate(LocalDateTime.now());
+				op.setReason("Test");
+				List<Operation> opList = new ArrayList<>();
+				opList.add(op);
+				acc.setOperations(opList);
+				
+				fr.bank.Customer c = new fr.bank.Customer();
+				c.setFirstname("Antony");
+				c.setLastname("Correoso");
+				c.setDateOfBirth(LocalDate.of(1994, 02, 14));
+				c.setBank(b);
+				c.setAddress(a);
+				
+				List<fr.bank.Customer> cList = new ArrayList<>();
+				cList.add(c);
+				b.setCustomers(cList);
+				acc.setCustomers(cList);
+				
+				List<Account> accList = new ArrayList<>();
+				accList.add(acc);
+				c.setAccounts(accList);
+				
+				entm.persist(b);
+				entm.persist(acc);
+				entm.persist(op);
+				entm.persist(c);
+
+				et.commit();
+				entm.close();
+				emf.close();
+				break;
 			case 99:
 				sc.close();
 				em.close();
@@ -103,6 +169,7 @@ public class TestJpa {
 		System.out.println("2. Find a book with title");
 		System.out.println("3. Find a loaning and display its books");
 		System.out.println("4. Find a customer and dispaly its loanings");
+		System.out.println("5. TP 4 - Generate table from JPA");
 		System.out.println("99. Exit");
 	}
 }
