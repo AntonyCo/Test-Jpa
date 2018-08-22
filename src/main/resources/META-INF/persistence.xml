@@ -24,6 +24,9 @@
 		<class>fr.bank.Customer</class>
 		<class>fr.bank.Account</class>
 		<class>fr.bank.Operation</class>
+		<class>fr.bank.BankBook</class>
+		<class>fr.bank.LifeInsurance</class>
+		<class>fr.bank.BankTransfert</class>
 		<properties>
 			<property name="hibernate.archive.autodetection" value=""/>
 			<property name="hibernate.hbm2ddl.auto" value="update"/>

@@ -14,6 +14,9 @@ import javax.persistence.TypedQuery;
 import fr.bank.Account;
 import fr.bank.Address;
 import fr.bank.Bank;
+import fr.bank.BankBook;
+import fr.bank.BankTransfert;
+import fr.bank.LifeInsurance;
 import fr.bank.Operation;
 
 public class TestJpa {
@@ -115,18 +118,38 @@ public class TestJpa {
 				a.setPostalCode(69380);
 				a.setStreet("Rue des cerisiers");
 				
-				Account acc = new Account();
+				/*Account acc = new Account();
 				acc.setBalance(1000d);
-				acc.setNumber("000AC");
+				acc.setNumber("000AC");*/
+				BankBook bb = new BankBook();
+				bb.setBalance(1000d);
+				bb.setNumber("BANKBOOK0000AC");
+				bb.setRate(10d);
+				LifeInsurance li = new LifeInsurance();
+				li.setBalance(2000d);
+				li.setNumber("LIFEINSURANCE0000AC");
+				li.setDate(LocalDate.of(2020, 1, 1));
+				li.setRate(5d);
 				
-				Operation op = new Operation();
-				op.setAccount(acc);
-				op.setAmount(100d);
-				op.setDate(LocalDateTime.now());
-				op.setReason("Test");
+				BankTransfert opBb = new BankTransfert();
+				opBb.setAccount(bb);
+				opBb.setAmount(100d);
+				opBb.setDate(LocalDateTime.now());
+				opBb.setReason("BankBook");
+				opBb.setRecipient("Mr. DUMONT");
+				
+				BankTransfert opLi = new BankTransfert();
+				opLi.setAccount(li);
+				opLi.setAmount(500d);
+				opLi.setDate(LocalDateTime.now());
+				opLi.setReason("Life insurance payment");
+				opLi.setRecipient("Antony");
+				
 				List<Operation> opList = new ArrayList<>();
-				opList.add(op);
-				acc.setOperations(opList);
+				opList.add(opBb);
+				opList.add(opLi);
+				bb.setOperations(opList);
+				li.setOperations(opList);
 				
 				fr.bank.Customer c = new fr.bank.Customer();
 				c.setFirstname("Antony");
@@ -138,15 +161,18 @@ public class TestJpa {
 				List<fr.bank.Customer> cList = new ArrayList<>();
 				cList.add(c);
 				b.setCustomers(cList);
-				acc.setCustomers(cList);
-				
+				bb.setCustomers(cList);
+				li.setCustomers(cList);
 				List<Account> accList = new ArrayList<>();
-				accList.add(acc);
+				accList.add(bb);
+				accList.add(li);
 				c.setAccounts(accList);
 				
 				entm.persist(b);
-				entm.persist(acc);
-				entm.persist(op);
+				entm.persist(bb);
+				entm.persist(li);
+				entm.persist(opBb);
+				entm.persist(opLi);
 				entm.persist(c);
 
 				et.commit();
@@ -169,7 +195,7 @@ public class TestJpa {
 		System.out.println("2. Find a book with title");
 		System.out.println("3. Find a loaning and display its books");
 		System.out.println("4. Find a customer and dispaly its loanings");
-		System.out.println("5. TP 4 - Generate table from JPA");
+		System.out.println("5. TP4 and TP5 - Generate table from JPA (static dataset)");
 		System.out.println("99. Exit");
 	}
 }
